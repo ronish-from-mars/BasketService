@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  basket.api:
+    image: basket.api
+    build:
+      context: ./Basket.API
+      dockerfile: Dockerfile
