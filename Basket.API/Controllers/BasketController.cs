@@ -28,8 +28,8 @@
         }
 
         // GET: api/Basket/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCustomerBasket([FromRoute] int id)
+        [HttpGet("{customerId}")]
+        public async Task<IActionResult> GetCustomerBasket([FromRoute] int customerId)
         {
             if (!ModelState.IsValid)
             {
@@ -37,7 +37,7 @@
             }
 
             var customerBasket = await this.basketsActorProvider.GetInstance()
-                .Ask<CustomerBasket>(new GetCustomerBasketMsg(id));
+                .Ask<CustomerBasket>(new GetCustomerBasketMsg(customerId));
 
             if (customerBasket is CustomerBasket && customerBasket != null)
             {
@@ -62,7 +62,7 @@
 
             if (customerBasket is CustomerBasket && customerBasket != null)
             {
-                return CreatedAtAction("GetCustomerBasket", new { id = customerBasket.Id }, customerBasket);
+                return CreatedAtAction("GetCustomerBasket", new { customerId = customerBasket.CustomerId }, customerBasket);
             }
 
             return NotFound();
@@ -104,7 +104,7 @@
 
             if (updatedBasket is CustomerBasket && updatedBasket != null)
             {
-                return CreatedAtAction("GetCustomerBasket", new { id = updatedBasket.Id }, updatedBasket);
+                return CreatedAtAction("GetCustomerBasket", new { customerId = updatedBasket.CustomerId }, updatedBasket);
             }
 
             return NotFound();
