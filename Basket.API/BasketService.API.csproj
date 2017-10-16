@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Basket.Actors\Basket.Actors.csproj" />
+    <ProjectReference Include="..\Basket.Actors\BasketService.Actors.csproj" />
   </ItemGroup>
 
 </Project>

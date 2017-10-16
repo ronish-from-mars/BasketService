@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Basket.Domain.Models
+﻿namespace BasketService.Domain.Models
 {
-    public class Product
+    public sealed class Product
     {
         public int ProductId { get; set; }
 

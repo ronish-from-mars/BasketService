@@ -1,14 +1,14 @@
-﻿using Akka.Actor;
-using Basket.Actors.Messages;
-using Basket.Actors.Messaging;
-using Basket.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Basket.Actors.Baskets
+﻿namespace BasketService.Actors.Baskets
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Akka.Actor;
+
+    using BasketService.Actors.Messages;
+    using BasketService.Actors.Messaging;
+    using BasketService.Domain.Models;
+
     public sealed class BasketActor : ReceiveActor
     {
         public CustomerBasket BasketState { get; set; }
@@ -22,70 +22,135 @@ namespace Basket.Actors.Baskets
 
             Receive<GetCustomerBasketMsg>(_ => Sender.Tell(this.BasketState));
             ReceiveAsync<AddItemToBasketMsg>(m => AddItemToBasketActionAsync(m).PipeTo(Sender), m => m.Quantity > 0);
-            Receive<RemoveItemFromBasketMsg>(m => Sender.Tell(RemoveItemToBasketAction(m)));
+            ReceiveAsync<UpdateItemQuantityMsg>(m => UpdateItemQuantityToBasketActionAsync(m).PipeTo(Sender), m => m.Quantity > 0);
+            Receive<RemoveItemFromBasketMsg>(m => Sender.Tell(RemoveItemToBasketActionAsync(m)));
         }
 
         private async Task<CustomerBasket> AddItemToBasketActionAsync(AddItemToBasketMsg message)
         {
             var result = await this.ProductsActorRef.Ask<Domain.Models.Status>(
                 new UpdateProductStockMsg(
-                    productId: message.Product.ProductId,
-                    quantity: -message.Quantity
+                    productId: message.ProductId,
+                    quantity: message.Quantity
                 )
             );
 
             switch (result)
             {
                 case Domain.Models.Status.StockUpdated:
-                    return AddItemToBasket(message.CustomerId, message.Product, message.Quantity);
+                    return await AddItemToBasketAsync(message.CustomerId, message.ProductId, message.Quantity);
                 default:
-                    return AddItemToBasket(message.CustomerId, message.Product, message.Quantity); // return current basket
+                    return await AddItemToBasketAsync(message.CustomerId, message.ProductId, message.Quantity); // return current basket
             }
 
         }
 
-        private CustomerBasket AddItemToBasket(int customerBasketId, Product product, int quantity)
+        private async Task<CustomerBasket> UpdateItemQuantityToBasketActionAsync(UpdateItemQuantityMsg message)
         {
             // check if product was added previously
-            var existingBasketItem = this.BasketState.Items.Find(item => item.Product.ProductId == product.ProductId);
+            var existingProduct = this.BasketState.Items?.Find(item => item.Product.ProductId == message.ProductId);
 
-            if (existingBasketItem is BasketItem)
+            if (existingProduct != null && existingProduct is BasketItem)
+            {
+                var previousQuantity = existingProduct.Quantity;
+
+                var newQuantity = message.Quantity;
+
+                var quantityDiff = previousQuantity - newQuantity;
+
+                // update product stock
+                var result = await this.ProductsActorRef.Ask<Domain.Models.Status>(
+                    new UpdateProductStockMsg(
+                        productId: message.ProductId,
+                        quantity: quantityDiff
+                    )
+                );
+
+                switch (result)
+                {
+                    case Domain.Models.Status.StockUpdated:
+                        // calculate new price
+                        var newAmount = this.BasketState.Subtotal + (existingProduct.Product.UnitPrice * quantityDiff);
+
+                        // calculate new quantity
+                        existingProduct.Quantity = existingProduct.Quantity + quantityDiff;
+
+                        // calculate increase in total items
+                        var totalItems = this.BasketState.TotalItems + quantityDiff;
+
+                        this.BasketState.Subtotal = newAmount;
+                        this.BasketState.TotalItems = totalItems;
+
+                        return this.BasketState;
+
+                    default:
+                        return this.BasketState;
+                }
+            }
+
+            return this.BasketState;
+        }
+
+        private async Task<CustomerBasket> AddItemToBasketAsync(int customerId, int productId, int quantity)
+        {
+           
+            // check if product was added previously
+            var existingProduct = this.BasketState.Items?.Find(item => item.Product.ProductId == productId);
+
+            if (existingProduct != null && existingProduct is BasketItem)
             {
                 // calculate increase in price
-                var increaseInAmount = existingBasketItem.Product.UnitPrice * quantity + this.BasketState.Total;
+                var increaseInAmount = this.BasketState.Subtotal + (existingProduct.Product.UnitPrice * quantity);
+
+                existingProduct.Quantity = existingProduct.Quantity + quantity;
 
                 // calculate increase in total items
                 var totalItems = this.BasketState.TotalItems + quantity;
 
-                this.BasketState.Total = increaseInAmount;
+                this.BasketState.Subtotal = increaseInAmount;
                 this.BasketState.TotalItems = totalItems;
 
                 return this.BasketState;
             }
             else
             {
-                // create a new basket item/product
-                var basketItemId = Guid.NewGuid();
-                this.BasketState.Items.Add(new BasketItem
-                {
-                    Id = basketItemId,
-                    Product = product,
-                    Quantity = quantity,
 
-                });
+                var product = await this.ProductsActorRef.Ask<Product>(new GetProductMsg(productId));
+
+                if (product != null && product is Product)
+                {
+                    // reinit basket total items and total price
+                    this.BasketState.TotalItems = this.BasketState.TotalItems + quantity;
+                    this.BasketState.Id = Guid.NewGuid();
+                    this.BasketState.CustomerId = customerId;
+                    this.BasketState.Subtotal = this.BasketState.Subtotal + (quantity * product.UnitPrice);
+
+                    // create a new basket item/product
+                    this.BasketState.Items.Add(new BasketItem
+                    {
+                        Product = product,
+                        Quantity = quantity,
+                    });
+                }
 
                 return this.BasketState;
             }
         }
 
-        public bool RemoveItemToBasketAction(RemoveItemFromBasketMsg message)
+        public bool RemoveItemToBasketActionAsync(RemoveItemFromBasketMsg message)
         {
-            var basketItem = this.BasketState.Items.Find(item => item.Id == message.BasketItemId);
+            var basketItem = this.BasketState.Items?.Find(item => item.Product.ProductId == message.ProductId);
 
-            if (basketItem is BasketItem)
+            if (basketItem != null && basketItem is BasketItem)
             {
-                this.BasketState.Items.Remove(basketItem);
-                return true;
+                var itemRemoved = this.BasketState.Items.Remove(basketItem);
+                if (itemRemoved)
+                {
+                    // reinit basket total items and total price
+                    this.BasketState.TotalItems = this.BasketState.TotalItems - basketItem.Quantity;
+                    this.BasketState.Subtotal = this.BasketState.Subtotal - (basketItem.Quantity * basketItem.Product.UnitPrice);
+                }
+                return itemRemoved;
             }
             else
             {

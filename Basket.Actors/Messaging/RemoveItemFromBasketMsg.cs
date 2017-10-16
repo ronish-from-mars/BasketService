@@ -1,17 +1,14 @@
-﻿using Basket.Actors.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Basket.Actors.Messages
+﻿namespace BasketService.Actors.Messages
 {
+    using BasketService.Actors.Messaging;
+
     public sealed class RemoveItemFromBasketMsg : BasketOperationMsg
     {
-        public readonly Guid BasketItemId;
+        public readonly int ProductId;
 
-        public RemoveItemFromBasketMsg(int customerId, Guid basketItemId) : base(customerId)
+        public RemoveItemFromBasketMsg(int customerId, int productId) : base(customerId)
         {
-            this.BasketItemId = basketItemId;
+            this.ProductId = productId;
         }
     }
     

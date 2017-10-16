@@ -1,10 +1,9 @@
-﻿using Basket.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Basket.Domain.Data
+﻿namespace BasketService.Domain.Data
 {
+    using System.Collections.Generic;
+
+    using BasketService.Domain.Models;
+
     public class Products
     {
         public static IEnumerable<Product> GetProducts()

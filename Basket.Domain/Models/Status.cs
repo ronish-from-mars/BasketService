@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Basket.Domain.Models
+﻿namespace BasketService.Domain.Models
 {
     public enum Status
     {
@@ -11,6 +7,7 @@ namespace Basket.Domain.Models
         ItemFound,
         ItemNotFound,
         StockUpdated,
-        InsuffientStock
+        InsuffientStock,
+        QuantityUpdated
     }
 }

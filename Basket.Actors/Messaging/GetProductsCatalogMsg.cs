@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Basket.Actors.Messaging
+﻿namespace BasketService.Actors.Messaging
 {
-    public class GetProductsCatalogMsg
+    public sealed class GetProductsCatalogMsg
     {
     }
 }

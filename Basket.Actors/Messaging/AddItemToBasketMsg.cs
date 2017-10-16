@@ -1,20 +1,16 @@
-﻿using Basket.Actors.Messaging;
-using Basket.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Basket.Actors.Messages
+﻿namespace BasketService.Actors.Messages
 {
+    using BasketService.Actors.Messaging;
+
     public sealed class AddItemToBasketMsg : BasketOperationMsg
     {
-        public readonly Product Product;
+        public readonly int ProductId;
 
         public readonly int Quantity;
 
-        public AddItemToBasketMsg(int customerId, Product product, int quantity) : base(customerId)
+        public AddItemToBasketMsg(int customerId, int productId, int quantity) : base(customerId)
         {
-            this.Product = product;
+            this.ProductId = productId;
             this.Quantity = quantity;
         }
     }

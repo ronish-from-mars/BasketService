@@ -1,14 +1,14 @@
-﻿using Akka.Actor;
-using System;
-using System.Collections.Generic;
-using Basket.Domain.Models;
-using System.Text;
-using System.Collections.ObjectModel;
-using Basket.Actors.Messaging;
-using System.Linq;
-
-namespace Basket.Actors.Products
+﻿namespace BasketService.Actors.Products
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+
+    using Akka.Actor;
+
+    using BasketService.Actors.Messaging;
+    using BasketService.Domain.Models;
+
     public partial class ProductsActor : ReceiveActor
     {
         private IList<Product> Products { get; set; }
@@ -34,9 +34,9 @@ namespace Basket.Actors.Products
 
             if (product is Product && product != null)
             {
-                if (product.QuantityAvailable >= 0 && message.Quantity > 0)
+                if (product.QuantityAvailable > 0 && message.Quantity > 0)
                 {
-                    product.QuantityAvailable += message.Quantity;
+                    product.QuantityAvailable -= message.Quantity;
                     return Domain.Models.Status.StockUpdated;
                 }
                 else

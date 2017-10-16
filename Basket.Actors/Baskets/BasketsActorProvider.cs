@@ -1,11 +1,9 @@
-﻿using Akka.Actor;
-using Basket.Actors.Products;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Basket.Actors.Baskets
+﻿namespace BasketService.Actors.Baskets
 {
+    using Akka.Actor;
+
+    using BasketService.Actors.Products;
+
     public class BasketsActorProvider
     {
         private IActorRef BasketsActorInstance { get; set; }

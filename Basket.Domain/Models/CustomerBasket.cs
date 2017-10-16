@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Basket.Domain.Models
+namespace BasketService.Domain.Models
 {
-    public class CustomerBasket
+    public sealed class CustomerBasket
     {
         public Guid Id { get; set; }
 
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
-        public List<BasketItem> Items { get; set; }
+        public List<BasketItem> Items { get; set; } = new List<BasketItem>();
 
         public int TotalItems { get; set; }
 
         public decimal Subtotal { get; set; }
-
-        public decimal Tax { get; set; }
-
-        public decimal Total { get; set; }
     }
 }

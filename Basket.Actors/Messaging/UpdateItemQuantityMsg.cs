@@ -1,11 +1,12 @@
 ﻿namespace BasketService.Actors.Messaging
 {
-    public sealed class UpdateProductStockMsg
+    public sealed class UpdateItemQuantityMsg : BasketOperationMsg
     {
         public readonly int ProductId;
+
         public readonly int Quantity;
 
-        public UpdateProductStockMsg(int productId, int quantity)
+        public UpdateItemQuantityMsg(int customerId, int productId, int quantity) : base(customerId)
         {
             this.ProductId = productId;
             this.Quantity = quantity;

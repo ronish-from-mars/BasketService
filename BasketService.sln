@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.API", "Basket.API\Basket.API.csproj", "{1AB65B53-5466-43C6-BEB7-8C9CBA86204A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketService.API", "Basket.API\BasketService.API.csproj", "{1AB65B53-5466-43C6-BEB7-8C9CBA86204A}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{504F7CAB-2533-4799-8591-C84F429037A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Domain", "Basket.Domain\Basket.Domain.csproj", "{54DBB712-C3F7-4E9B-835C-D5A457430B49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketService.Domain", "Basket.Domain\BasketService.Domain.csproj", "{54DBB712-C3F7-4E9B-835C-D5A457430B49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Actors", "Basket.Actors\Basket.Actors.csproj", "{E8C5BE88-60C2-4BDE-891E-5604E82E4981}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketService.Actors", "Basket.Actors\BasketService.Actors.csproj", "{E8C5BE88-60C2-4BDE-891E-5604E82E4981}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

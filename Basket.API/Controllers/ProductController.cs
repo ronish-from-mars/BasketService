@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Basket.Actors.Baskets;
-using Basket.Actors.Products;
-using Basket.Actors.Messaging;
-using Akka.Actor;
-using Basket.Domain.Models;
-
-namespace Basket.API.Controllers
+﻿namespace BasketService.API.Controllers
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Mvc;
+
+    using Akka.Actor;
+
+    using BasketService.Actors.Baskets;
+    using BasketService.Actors.Messaging;
+    using BasketService.Actors.Products;
+    using BasketService.Domain.Models;
+
     [Produces("application/json")]
     [Route("api/Product")]
     public class ProductController : Controller
@@ -30,11 +31,6 @@ namespace Basket.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductsCatalog()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var products = await this.productsActorProvider.GetInstance()
                 .Ask<IEnumerable<Product>>(new GetProductsCatalogMsg());
 
@@ -50,7 +46,7 @@ namespace Basket.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            if (id <= 0)
             {
                 return BadRequest(ModelState);
             }

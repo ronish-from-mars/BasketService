@@ -1,10 +1,7 @@
-﻿using Akka.Actor;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Basket.Actors.Products
+﻿namespace BasketService.Actors.Products
 {
+    using Akka.Actor;
+
     public sealed class ProductsActorProvider
     {
         private IActorRef ProductsActor { get; set; }
