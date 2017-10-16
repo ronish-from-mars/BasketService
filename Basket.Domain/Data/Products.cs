@@ -6,7 +6,8 @@
 
     public class Products
     {
-        public static IEnumerable<Product> GetProducts()
+        // harcoded products values
+        public static List<Product> GetProducts()
         {
             return new List<Product> {
                 new Product {

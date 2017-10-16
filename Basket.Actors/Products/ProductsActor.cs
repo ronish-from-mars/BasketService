@@ -34,10 +34,20 @@
 
             if (product is Product && product != null)
             {
-                if (product.QuantityAvailable > 0 && message.Quantity > 0)
+                if (product.QuantityAvailable >= 0)
                 {
-                    product.QuantityAvailable -= message.Quantity;
-                    return Domain.Models.Status.StockUpdated;
+                    // update quantity
+                    var quantityAvailable = product.QuantityAvailable - message.Quantity;
+                       
+                    if (quantityAvailable >= 0)
+                    {
+                        product.QuantityAvailable = quantityAvailable;
+                        return Domain.Models.Status.StockUpdated;
+                    }
+                    else
+                    {
+                        return Domain.Models.Status.InsuffientStock;
+                    } 
                 }
                 else
                 {

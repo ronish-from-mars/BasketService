@@ -68,8 +68,8 @@
             return NotFound();
         }
 
-        // DELETE: api/basket/item/5
-        [HttpDelete("item")]
+        // DELETE: api/basket/remove
+        [HttpDelete("remove")]
         public async Task<IActionResult> DeleteItemFromBasket([FromBody] ProductDto productDto)
         {
             if (!ModelState.IsValid)
@@ -79,11 +79,11 @@
 
             // send message to remove item from basket
             var itemRemoved = await this.basketsActorProvider.GetInstance()
-                .Ask<bool>(new RemoveItemFromBasketMsg(productDto.CustomerId, productDto.ProductId));
+                .Ask<Task<bool>>(new RemoveItemFromBasketMsg(productDto.CustomerId, productDto.ProductId));
 
-            if (itemRemoved)
+            if (itemRemoved.Result)
             {
-                return Ok(itemRemoved);
+                return Ok(itemRemoved.Result);
             }
 
             return NotFound();
@@ -111,25 +111,25 @@
         }
 
 
-        //// DELETE: api/basket/clear/5
-        //[HttpDelete("clear")]
-        //public async Task<IActionResult> DeleteItemFromBasket([FromBody] Guid id)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        // DELETE: api/basket/clear
+        [HttpDelete("clear")]
+        public async Task<IActionResult> ClearBasket([FromBody] int customerId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    // send message to remove item from basket
-        //    var itemRemoved = await this.basketsActorProvider.GetInstance()
-        //        .Ask<bool>(new RemoveItemFromBasketMsg(productDto.CustomerId, productDto.ProductId));
+            // send message to clear basket
+            var basketEmptied = await this.basketsActorProvider.GetInstance()
+                .Ask<Task<CustomerBasket>>(new ClearCustomerBasketMsg(customerId));
 
-        //    if (itemRemoved)
-        //    {
-        //        return Ok(itemRemoved);
-        //    }
+            if (basketEmptied.Result != null && basketEmptied.Result is CustomerBasket)
+            {
+                return Ok(basketEmptied.Result);
+            }
 
-        //    return NotFound();
-        //}
+            return NotFound();
+        }
     }
 }

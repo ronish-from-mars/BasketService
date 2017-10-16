@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BasketService.Domain.Models
+﻿namespace BasketService.Domain.Models
 {
+    using System;
+    using System.Collections.Generic;
+
     public sealed class CustomerBasket
     {
         public Guid Id { get; set; }

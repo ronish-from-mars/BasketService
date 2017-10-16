@@ -22,7 +22,13 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvcCore()
+               .AddApiExplorer()
+               .AddJsonFormatters();
+
+            services.AddSwaggerGen(s => {
+                s.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Basket Api", Version = "v1" });
+            });
 
             services.AddSingleton(_ => ActorSystem.Create("basketservice"));
 
@@ -39,6 +45,13 @@
             }
 
             app.UseMvc();
+            app.UseSwagger(s => {
+                s.RouteTemplate = "help/documentation/{documentName}/basketapi.json";
+            });
+            app.UseSwaggerUI(s => {
+                s.RoutePrefix = "help/documentation";
+                s.SwaggerEndpoint("/help/documentation/v1/basketapi.json", "Basket Api");
+            });
         }
     }
 }
