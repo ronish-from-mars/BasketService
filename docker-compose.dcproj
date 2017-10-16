@@ -3,10 +3,10 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.0</ProjectVersion>
     <DockerTargetOS>Windows</DockerTargetOS>
-    <ProjectGuid>504f7cab-2533-4799-8591-c84f429037a9</ProjectGuid>
+    <ProjectGuid>2940d022-fc83-42b7-b3d1-0c350f89ce75</ProjectGuid>
     <DockerLaunchBrowser>True</DockerLaunchBrowser>
-    <DockerServiceUrl>http://{ServiceIPAddress}/api/values</DockerServiceUrl>
-    <DockerServiceName>basket.api</DockerServiceName>
+    <DockerServiceUrl>http://{ServiceIPAddress}/help/documentation</DockerServiceUrl>
+    <DockerServiceName>basketservice.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.ci.build.yml" />
