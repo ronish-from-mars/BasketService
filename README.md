@@ -26,13 +26,14 @@
 
 - Actor Model using <a href="http://getakka.net/">Akka.Net</a> 
 
-  Akka.Net is great about building high speed, scalable and resilient micro-services platforms, by using actor model and passing messages between actors.
+  Akka.Net is great about building high speed, scalable and resilient micro-services, by using actor model and passing messages between actors.
   ![](https://raw.githubusercontent.com/ronish-from-mars/BasketService/master/public/ActorModel.png)
 
 ## Features
-- .NET Core Dependency Injection
-- Used Autorest to generate clients for the APIs
-- Used Swashbuckle which combines ApiExplorer and Swagger/swagger-ui to provide a rich discovery, documentation and playground experience to your API consumers (https://github.com/domaindrivendev/Swashbuckle).
+- Autorest to generate clients/classes for the APIs
+- Swashbuckle which combines ApiExplorer and Swagger/swagger-ui to provide a rich discovery, documentation and playground experience to your API consumers (https://github.com/domaindrivendev/Swashbuckle)
+- Native .NET Core Dependency Injection
+- Actor model with supervision
 
 Swagger UI path: [localhost]/help/documentation
 
@@ -71,27 +72,27 @@ URI: api/basket/remove
 
 Method: GET
 
-URI: api/Product
+URI: api/product
 
 ### Get Product By Id
 
 Method: GET
 
-URI: api/Product/{id}
+URI: api/product/{id}
 
 ## Notes
 
--  Product stocks is updated when items in basket, quantity are updated/deleted.
+- Product stocks is updated when items in basket, quantity are updated/deleted
 
-- Unit tests include testing of the client sdk only.
+- Include few unit tests of the client sdk only
 
 - APIs testing can be done using the Swagger UI: http://localhost:54578/help/documentation
 
 
 ## Assumptions
 
-- Customers already have an account on the system.
+- Customers already have an account on the system
 
-- The system uses customer id to update basket rather than cookies when browsing anonymously.
+- The system uses customer id as reference to update basket rather than cookies when browsing anonymously
 
-- The system uses a hard-corded sample product catalog. All is in-memory and is lost after the application stops.
+- The system uses a hard-corded sample product catalog. All is in-memory and is lost after the application stops
