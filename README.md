@@ -30,7 +30,7 @@
   ![](https://raw.githubusercontent.com/ronish-from-mars/BasketService/master/public/ActorModel.png)
 
 ## Features
-- Autorest to generate clients/classes for the APIs
+- Autorest to generate clients SDK
 - Swashbuckle which combines ApiExplorer and Swagger/swagger-ui to provide a rich discovery, documentation and playground experience to your API consumers (https://github.com/domaindrivendev/Swashbuckle)
 - Native .NET Core Dependency Injection
 - Actor model with supervision
