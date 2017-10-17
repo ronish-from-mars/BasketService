@@ -84,7 +84,7 @@ URI: api/product/{id}
 
 - Product stocks is updated when items in basket, quantity are updated/deleted
 
-- Include few unit tests of the client sdk only (http responses)
+- Include few unit tests of the client sdk only (http status codes)
 
 - APIs testing can be done using the Swagger UI: http://localhost:54578/help/documentation
 
