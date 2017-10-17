@@ -88,11 +88,10 @@ URI: api/product/{id}
 
 - APIs testing can be done using the Swagger UI: http://localhost:54578/help/documentation
 
+- The system uses a hard-corded sample product catalog. All is in-memory and is lost after the application stops
 
 ## Assumptions
 
 - Customers already have an account on the system
 
 - The system uses customer id as reference to update basket rather than cookies when browsing anonymously
-
-- The system uses a hard-corded sample product catalog. All is in-memory and is lost after the application stops
